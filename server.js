@@ -20,6 +20,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+app.use('/', (req, res) => {
+    res.send('Xin chào, đây là API của Pickle Mate');
+});
 app.use('/api/players', playerRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/matches', matchRoutes);
