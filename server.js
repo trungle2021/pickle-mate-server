@@ -26,13 +26,22 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+        swaggerOptions: {
+            docExpansion: 'none',
+            cacheControl: false,
+        },
+    })
+);
 app.use('/api/players', playerRoutes);
-app.use('/api/sessions', sessionRoutes);
+
 app.use('/api/matches', matchRoutes);
 app.use('/api/skill-point-change-logs', changeLogRoutes);
 
 // Server start
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-});
+}); app.use('/api/sessions', sessionRoutes);
