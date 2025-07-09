@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 // // Routes
 const playerRoutes = require('./routes/playerRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
@@ -21,9 +23,10 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/', (req, res) => {
-    res.send('Xin chào, đây là API của Pickle Mate');
+app.get('/', (req, res) => {
+    res.redirect('/api-docs');
 });
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/players', playerRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/matches', matchRoutes);

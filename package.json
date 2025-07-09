@@ -18,6 +18,8 @@
         "express": "^5.1.0",
         "mongodb": "^6.17.0",
         "mongoose": "^8.16.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
         "vercel": "^44.2.13"
     },
     "devDependencies": {

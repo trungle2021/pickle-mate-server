@@ -24,13 +24,13 @@ exports.getPlayerById = async (req, res) => {
 // POST /api/players
 exports.createPlayer = async (req, res) => {
     try {
-        const { name, gender, skillLevel } = req.body;
+        const { name, gender, skillPoints } = req.body;
 
-        if (!name || !gender || !skillLevel) {
+        if (!name || !gender || !skillPoints) {
             return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
         }
 
-        const newPlayer = new Player({ name, gender, skillLevel });
+        const newPlayer = new Player({ name, gender, skillPoints });
         const savedPlayer = await newPlayer.save();
         res.status(201).json(savedPlayer);
     } catch (error) {
