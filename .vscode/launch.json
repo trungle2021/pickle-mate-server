@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Server",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/server/server.js",
+            "outFiles": [
+                "${workspaceFolder}/server/**/*.js"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "MONGO_URI": "mongodb+srv://leanhtrung97:PY6arRW2A8gSoX46@cluster0.sfeavdl.mongodb.net/PickleMateDB?retryWrites=true&w=majority&appName=Cluster0",
+                "PORT": "3000"
+            },
+            "restart": true,
+        }
+    ]
+}

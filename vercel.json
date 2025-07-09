@@ -1,0 +1,24 @@
+{
+    "projects": "pickle-mate-server",
+    "rewrites": [
+      { "source": "/api/(.*)", "destination": "/api/$1" }
+    ],
+    "functions": {
+      "api/**/*.js": {
+        "runtime": "nodejs18.x"
+      }
+    },
+    "builds": [
+      {
+        "src": "server/api/index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "server/api/index.js"
+      }
+    ]
+  }
+  
