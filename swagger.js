@@ -1,5 +1,6 @@
 // swagger.js
 const swaggerJSDoc = require('swagger-jsdoc');
+const DOMAIN = process.env.DOMAIN || 'http://localhost:8080'
 
 const options = {
     definition: {
@@ -11,7 +12,7 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:8080', // hoặc domain thật khi deploy
+                url: DOMAIN, // hoặc domain thật khi deploy
             },
         ],
     },
