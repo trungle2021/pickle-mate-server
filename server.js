@@ -34,11 +34,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 }
 ))
 app.use('/api/players', playerRoutes);
-
 app.use('/api/matches', matchRoutes);
 app.use('/api/skill-point-change-logs', changeLogRoutes);
+app.use('/api/sessions', sessionRoutes);
 
 // Server start
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-}); app.use('/api/sessions', sessionRoutes);
+}); 

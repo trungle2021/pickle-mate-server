@@ -1,6 +1,7 @@
 // swagger.js
 const swaggerJSDoc = require('swagger-jsdoc');
-const DOMAIN = process.env.DOMAIN || 'http://localhost:8080'
+require('dotenv').config();
+const DOMAIN = process.env.DOMAIN
 
 const options = {
     definition: {
