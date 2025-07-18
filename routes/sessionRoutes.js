@@ -11,7 +11,7 @@ const sessionController = require('../controllers/sessionController');
 
 /**
  * @swagger
- * /sessions:
+ * /api/sessions:
  *   post:
  *     summary: Tạo phiên chơi mới
  *     tags: [Sessions]
@@ -111,7 +111,7 @@ router.post('/generate-round-robin', sessionController.generateRoundRobinMatches
 
 /**
 //  * @swagger
- * /sessions/generate-skill-based:
+ * /api/sessions/generate-skill-based:
  *   post:
  *     summary: Tạo cặp đấu dựa trên kỹ năng người chơi
  *     tags: [Sessions]

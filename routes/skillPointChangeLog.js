@@ -10,7 +10,7 @@ const SkillPointChangeLogController = require('../controllers/skillPointChangeLo
 
 /**
  * @swagger
- * /change-logs:
+ * /api/change-logs:
  *   get:
  *     summary: Lấy lịch sử thay đổi điểm kỹ năng
  *     tags: [SkillPointsChangeLog]
@@ -40,7 +40,7 @@ router.get('/', SkillPointChangeLogController.getChangeLog);
 
 /**
  * @swagger
- * /change-logs/delete-all:
+ * /api/change-logs/delete-all:
  *   delete:
  *     summary: Xoá toàn bộ log thay đổi điểm kỹ năng
  *     tags: [SkillPointsChangeLog]

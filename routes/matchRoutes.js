@@ -11,7 +11,7 @@ const matchController = require('../controllers/matchController');
 
 /**
  * @swagger
- * /matches/update-points:
+ * /api/matches/update-points:
  *   put:
  *     summary: Cập nhật điểm người chơi dựa trên kết quả trận đấu
  *     tags: [Matches]
