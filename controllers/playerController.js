@@ -1,12 +1,20 @@
 const Player = require('../models/player');
+const ApiResponse = require('../utils/api-response');
+const ApiError = require('../utils/api-error');
 
 // GET /api/players
 exports.getAllPlayers = async (req, res) => {
     try {
         const players = await Player.find();
-        res.json(players);
+        const respone =  ApiResponse.success('Lấy danh sách người chơi thành công', players);
+        res.json(respone);
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi server', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 };
 
@@ -14,10 +22,19 @@ exports.getAllPlayers = async (req, res) => {
 exports.getPlayerById = async (req, res) => {
     try {
         const player = await Player.findById(req.params.id);
-        if (!player) return res.status(404).json({ message: 'Không tìm thấy người chơi' });
-        res.json(player);
+        const response = ApiResponse.success('Lấy thông tin người chơi thành công', player);
+
+        if (!player) {
+            return res.status(404).json(ApiResponse.error('Không tìm thấy người chơi'));
+        }
+        res.json(response);
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi server', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 };
 
@@ -27,14 +44,21 @@ exports.createPlayer = async (req, res) => {
         const { name, gender, skillPoints } = req.body;
 
         if (!name || !gender || !skillPoints) {
-            return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+            const response = ApiResponse.error('Thiếu thông tin bắt buộc');
+            return res.status(400).json(response);
         }
 
         const newPlayer = new Player({ name, gender, skillPoints });
         const savedPlayer = await newPlayer.save();
-        res.status(201).json(savedPlayer);
+        const response = ApiResponse.success('Tạo người chơi thành công', savedPlayer);
+        res.status(201).json(response);
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi tạo người chơi', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 };
 
@@ -42,9 +66,18 @@ exports.createPlayer = async (req, res) => {
 exports.resetAllPlayersPoints = async (req, res) => {
     try {
         const updatedPlayers = await Player.updateMany({}, { skillPoints: 1.0 });
-        res.json({ message: 'Đã reset điểm của tất cả người chơi về 1.0', updatedCount: updatedPlayers.nModified });
+        const response = ApiResponse.success('Đã reset điểm của tất cả người chơi về 1.0', updatedPlayers);
+        if (updatedPlayers.nModified === 0) {
+            return res.status(404).json(ApiResponse.error('Không có người chơi nào để reset điểm'));
+        }
+        res.json(response);
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi reset điểm', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 }
 
@@ -56,10 +89,18 @@ exports.updatePlayer = async (req, res) => {
             req.body,
             { new: true } // Trả về player mới sau khi cập nhật
         );
-        if (!updatedPlayer) return res.status(404).json({ message: 'Không tìm thấy người chơi' });
-        res.json(updatedPlayer);
+
+        if (!updatedPlayer) {
+            return res.status(404).json(ApiResponse.error('Không tìm thấy người chơi'));
+        }
+        res.json(ApiResponse.success('Cập nhật người chơi thành công', updatedPlayer));
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi cập nhật', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 };
 
@@ -67,9 +108,16 @@ exports.updatePlayer = async (req, res) => {
 exports.deletePlayer = async (req, res) => {
     try {
         const deleted = await Player.findByIdAndDelete(req.params.id);
-        if (!deleted) return res.status(404).json({ message: 'Không tìm thấy người chơi' });
-        res.json({ message: 'Đã xoá người chơi' });
+        if (!deleted) {
+            return res.status(404).json(ApiResponse.error('Không tìm thấy người chơi để xoá'));
+        }
+        res.json(ApiResponse.success('Xoá người chơi thành công', null));
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi xoá', error });
+        if (error instanceof ApiError) {
+            const response = ApiResponse.error(error.message);
+            return res.status(error.statusCode).json(response);
+          }
+          const response = ApiResponse.error('Lỗi server');
+          res.status(500).json(response);
     }
 };

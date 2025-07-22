@@ -1,19 +1,20 @@
 
-const { combinations } = require("../utils/algorithm");
-const Player = require("../models/player");
+const { combinations, shuffle } = require("../utils/algorithm");
 const Match = require("../models/match");
+const ApiError = require("../utils/api-error");
 
 async function generateRoundRobinMatches(playerIds, numCourts, sessionId) {
    // Kiểm tra số lượng người chơi
     if (playerIds.length < 4 || playerIds.length % 4 !== 0) {
-        throw new Error('Cần ít nhất 4 người chơi để tạo session và tổng số người chơi là bội số của 4.');
+        throw new ApiError(400, "Số lượng người chơi phải là bội số của 4 và ít nhất 4 người");
     }
 
     if (numCourts > Math.floor(playerIds.length / 4)) {
-        throw new Error("Số lượng sân không được vượt quá số trận đấu có thể diễn ra trong mỗi vòng (số người chơi/4)");
+        throw new ApiError(400,"Số lượng sân không được vượt quá số trận đấu có thể diễn ra trong mỗi vòng (số người chơi/4)");
     }
 
-    const players = await Player.find({ _id: { $in: playerIds } }).lean();
+    // Shuffle players
+    playerIds = shuffle(playerIds);
     const allPartners = new Set(); // Track used partner pairs
     const allMatches = [];
     const maxConsecutiveMatches = 1; // Max consecutive matches per player

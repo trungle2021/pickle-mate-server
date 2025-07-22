@@ -3,6 +3,7 @@ const Player = require('../models/player');
 const Session = require('../models/session');
 const SkillPointChangeLog = require("../models/skillPointChangeLog");
 const mongoose = require('mongoose');
+const ApiError = require('../utils/api-error');
 
 /**
  * {
@@ -36,19 +37,19 @@ const updatePlayerPointsBasedOnHistory = async (sessionId, matchResult) => {
         // Validate sessionId
         const sessionDoc = await Session.findById(sessionId).session(session);
         if (!sessionDoc) {
-            throw new Error('Session not found');
+            throw new ApiError(404, 'Không tìm thấy session với ID: ' + sessionId);
         }
 
         // Retrieve all matches for the session
         const matchesInSession = await Match.find({ session: sessionId }).session(session);
         if (!matchesInSession || matchesInSession.length === 0) {
-            throw new Error('No matches found for this session');
+            throw new ApiError(404, 'Không tìm thấy trận đấu nào trong session này');
         }
 
         const validMatchIds = new Set(matchesInSession.map(match => match._id.toString()));
         for (const resultItem of matchResult) {
             if (!validMatchIds.has(resultItem.matchId)) {
-                throw new Error(`Invalid match ID: ${resultItem.matchId}`);
+                throw new ApiError(400, `Trận đấu với ID ${resultItem.matchId} không hợp lệ hoặc không thuộc session này.`);
             }
         }
 
@@ -112,27 +113,6 @@ const updatePlayerPointsBasedOnHistory = async (sessionId, matchResult) => {
                 });
             }
 
-
-            // Update losers
-            // for (const player of losingTeam) {
-            //     const currentPlayer = await Player.findById(player._id).session(session);
-
-            //     if (currentPlayer.skillPoints > 0) {
-            //         const updated = Math.max(
-            //             0, // đảm bảo không xuống dưới 1.0
-            //             Math.round((currentPlayer.skillPoints + loseBonus) * 100) / 100
-            //         );
-
-            //         await Player.findByIdAndUpdate(
-            //             player._id,
-            //             { $set: { skillPoints: updated } },
-            //             { session }
-            //         );
-            //     } else {
-            //         console.log(`Player ${player._id} has 0 skillPoints, skipping deduction.`);
-            //     }
-            // }
-
             for (const player of losingTeam) {
                 const currentPlayer = await Player.findById(player._id).session(session);
                 const before = currentPlayer.skillPoints;
@@ -182,7 +162,7 @@ const updatePlayerPointsBasedOnHistory = async (sessionId, matchResult) => {
         await session.commitTransaction();
         session.endSession();
 
-        return { message: 'Điểm của người chơi và kết quả trận đấu đã được cập nhật thành công.',changeLogs };
+        return changeLogs;
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
