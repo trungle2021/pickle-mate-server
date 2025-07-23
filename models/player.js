@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const playerSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    gender: { type: String, enum: ['male', 'female', 'other'], required: true },
+    gender: { type: String, enum: ['nam', 'nữ'], required: true },
     skillPoints: { type: Number, required: true },
 }, { timestamps: true });
 

@@ -6,15 +6,15 @@ const ApiError = require('../utils/api-error');
 exports.getAllPlayers = async (req, res) => {
     try {
         const players = await Player.find();
-        const respone =  ApiResponse.success('Lấy danh sách người chơi thành công', players);
+        const respone = ApiResponse.success('Lấy danh sách người chơi thành công', players);
         res.json(respone);
     } catch (error) {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 };
 
@@ -32,9 +32,9 @@ exports.getPlayerById = async (req, res) => {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 };
 
@@ -43,9 +43,16 @@ exports.createPlayer = async (req, res) => {
     try {
         const { name, gender, skillPoints } = req.body;
 
+        if (gender !== 'nam' && gender !== 'nữ') {
+            return res.status(400).json(ApiResponse.error('Giới tính phải là nam hoặc nữ'));
+        }
+
         if (!name || !gender || !skillPoints) {
-            const response = ApiResponse.error('Thiếu thông tin bắt buộc');
-            return res.status(400).json(response);
+            return res.status(400).json(ApiResponse.error('Thiếu thông tin bắt buộc'));
+        }
+
+        if (skillPoints < 0) {
+            return res.status(400).json(ApiResponse.error('Điểm kĩ năng phải lớn hơn 0'));
         }
 
         const newPlayer = new Player({ name, gender, skillPoints });
@@ -56,9 +63,9 @@ exports.createPlayer = async (req, res) => {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 };
 
@@ -75,9 +82,9 @@ exports.resetAllPlayersPoints = async (req, res) => {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 }
 
@@ -98,9 +105,9 @@ exports.updatePlayer = async (req, res) => {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 };
 
@@ -116,8 +123,8 @@ exports.deletePlayer = async (req, res) => {
         if (error instanceof ApiError) {
             const response = ApiResponse.error(error.message);
             return res.status(error.statusCode).json(response);
-          }
-          const response = ApiResponse.error('Lỗi server');
-          res.status(500).json(response);
+        }
+        const response = ApiResponse.error('Lỗi server');
+        res.status(500).json(response);
     }
 };

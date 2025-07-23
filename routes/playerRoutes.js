@@ -40,7 +40,7 @@ router.get('/', playerController.getAllPlayers);
  *                 type: string
  *               gender:
  *                 type: string
- *                 enum: [Male, Female, Other]
+ *                 enum: [nam,nữ]
  *               skillPoints:
  *                  type: number
  *                  default: 1.0
